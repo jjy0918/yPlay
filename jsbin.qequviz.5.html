@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<!--
+Created using JS Bin
+http://jsbin.com
+
+Copyright (c) 2019 by jjy0918 (http://jsbin.com/qequviz/5/edit)
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/> 
+  <meta name="viewport" content="width=device-width">
+  <title>유튜브 음악 플레이</title>
+</head>
+<body>
+<div id="video_slide" >
+   <iframe width="500" height="315" id="ifm" src="https://www.youtube.com/embed/O136JYv3weQ?enablejsapi=1"></iframe>
+
+   <br /><br />
+   <a href="javascript:;" onClick="startvideo();">start</a>
+   <a href="javascript:;" onClick="stopVideo();">stop</a>
+  <a href="javascript:;" onClick="changeIframeUrl();">ch</a>
+
+<script id="jsbin-javascript">
+
+function startvideo() {
+    var div = document.getElementById("video_slide");
+    var iframe = div.getElementsByTagName("iframe")[0].contentWindow;
+    iframe.postMessage('{"event":"command","func":"playVideo","args":""}','*');
+}
+
+function stopVideo() {
+    var div = document.getElementById("video_slide");
+    var iframe = div.getElementsByTagName("iframe")[0].contentWindow;
+    iframe.postMessage('{"event":"command","func":"pauseVideo","args":""}','*');
+}
+
+
+var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+
+function onYouTubeIframeAPIReady() {
+            player = new YT.Player('ifm', {
+
+                events: {
+                    'onReady': onPlayerReady,               
+                    'onStateChange': onPlayerStateChange    
+                }
+            });
+        }
+        function onPlayerReady(event) {
+
+            // 플레이어 자동실행 (주의: 모바일에서는 자동실행되지 않음)
+            //event.target.playVideo();
+        }
+        var playerState;
+        function onPlayerStateChange(event) {
+            if( event.data == YT.PlayerState.ENDED)
+              {
+                endMusic();
+              }
+        }
+
+function nextMusic(MuID)
+{
+
+  player.seekTo(0, true);
+  player.loadVideoById(MuID, 0, "large");
+  
+  player.playVideo();
+  
+}
+
+function Volum(vol)
+{
+  player.setVolume(vol);
+}
+
+
+function endMusic()
+{
+   window.external.nextMusic();
+}
+
+function getNowTime()
+{
+  return player.getCurrentTime(); 
+}
+
+function getTotalTime()
+{
+  return player.getDuration(); 
+}
+
+
+
+</script>
+</body>
+</html>
+
